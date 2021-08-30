@@ -14,6 +14,6 @@ namespace ToDoList3.Data
         ToDoList GetToDoListById(int id);
         void CreateToDoList(ToDoList list);
         void UpdateToDoList(ToDoList list);
-        void DeleteToDoList(ToDoList list);
+        void DeleteToDoList(int id);
     }
 }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ToDoList3.Data;
 using ToDoList3.Dtos;
 using ToDoList3.Models;
+using ToDoList3.Services;
 
 namespace ToDoList3.Controllers
 {
@@ -15,30 +16,29 @@ namespace ToDoList3.Controllers
     [ApiController]
     public class ToDoListsController : ControllerBase
     {
-        private readonly IToDoListRepo _repository;
+        //private readonly IToDoListRepo _repository;
+        private readonly ToDoListService _service;
         private readonly IMapper _mapper;
-        public ToDoListsController(IToDoListRepo repository, IMapper mapper)
+        public ToDoListsController(ToDoListService service, IMapper mapper)
         {
-            _repository = repository;
+            _service = service;
             _mapper = mapper;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<ToDoList>> GetAllToDoLists()
         {
-            var toDoListItems = _repository.GetAllToDoLists();
+            var toDoListItems = _service.GetAllToDoLists();
 
             return Ok(_mapper.Map<IEnumerable<ToDoListReadDto>>(toDoListItems));
         }
         [HttpGet("{id}", Name = "GetToDoListById")]
         public ActionResult<ToDoListReadDto> GetToDoListById(int id)
         {
-            var toDoListItem = _repository.GetToDoListById(id);
-            if (toDoListItem != null)
-            {
-                return Ok(_mapper.Map<ToDoListReadDto>(toDoListItem));
-            }
-            return NotFound();
+            var toDoListItem = _service.GetToDoListById(id);
+            return Ok(_mapper.Map<ToDoListReadDto>(toDoListItem));
+            
+            
         }
 
         [HttpPost]
@@ -46,39 +46,29 @@ namespace ToDoList3.Controllers
         public ActionResult<ToDoListReadDto> CreateToDoList(ToDoListCreateDto listCreateDto)
         {
             var listModel = _mapper.Map<ToDoList>(listCreateDto);
-            _repository.CreateToDoList(listModel);
-            _repository.SaveChanges();
-
+            _service.CreateToDoList(listModel);
             var listReadDto = _mapper.Map<ToDoListReadDto>(listModel);
 
             //return CreatedAtRoute(nameof(GetToDoListById), new { Id = listReadDto.Id }, listReadDto);
-            return Ok(_repository.GetAllToDoLists());
+            return Ok(_service.GetAllToDoLists());
         }
         [HttpPut("{id}")]
         public ActionResult UpdateToDoList(int id, ToDoListUpdateDto listUpdateDto)
         {
-            var listModelFromRepo = _repository.GetToDoListById(id);
-            if (listModelFromRepo == null)
-            {
-                return NotFound();
-            }
+            var listModelFromRepo = _service.GetToDoListById(id);
+
             _mapper.Map(listUpdateDto, listModelFromRepo);
-            _repository.UpdateToDoList(listModelFromRepo);
-            _repository.SaveChanges();
+            _service.UpdateToDoList(listModelFromRepo);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public ActionResult DeleteToDoList(int id)
         {
-            var listModelFromRepo = _repository.GetToDoListById(id);
-            if(listModelFromRepo == null)
-            {
-                return NotFound();
-            }
-            _repository.DeleteToDoList(listModelFromRepo);
-            _repository.SaveChanges();
-            return Ok(_repository.GetAllToDoLists());
+            var listModelFromRepo = _service.GetToDoListById(id);
+            _service.DeleteToDoList(id);
+
+            return Ok(_service.GetAllToDoLists());
         }
 
     }

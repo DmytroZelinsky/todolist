@@ -39,5 +39,10 @@ namespace ToDoList3.Data
         {
             throw new NotImplementedException();
         }
+
+        public void DeleteToDoList(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -6,9 +6,7 @@ namespace ToDoList3.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "State",
-                table: "ToDoLists");
+            
 
             migrationBuilder.AddColumn<int>(
                 name: "Importance",

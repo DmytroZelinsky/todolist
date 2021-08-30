@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ToDoList3.Data;
 using AutoMapper;
+using ToDoList3.Services;
 
 namespace ToDoList3
 {
@@ -31,7 +32,8 @@ namespace ToDoList3
             services.AddDbContext<ToDoListContext>((opt) => opt.UseSqlServer(Configuration.GetConnectionString("ToDoListConnection")));
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddScoped<IToDoListRepo, SqlToDoListRepo>();  
+            services.AddScoped<IToDoListRepo, SqlToDoListRepo>();
+            services.AddScoped<ToDoListService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ToDoList3", Version = "v1" });

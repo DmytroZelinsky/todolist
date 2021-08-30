@@ -38,20 +38,25 @@ namespace ToDoList3.Data
                 throw new ArgumentNullException(nameof(list));
             }
             _context.ToDoLists.Add(list);
+            _context.SaveChanges();
         }
 
         public void UpdateToDoList(ToDoList list)
         {
+            _context.SaveChanges();
 
         }
 
-        public void DeleteToDoList(ToDoList list)
+        public void DeleteToDoList(int id)
         {
-            if (list == null)
+            ToDoList todoItem = GetToDoListById(id);
+            if (todoItem == null)
             {
-                throw new ArgumentNullException(nameof(list));
+                throw new ArgumentException("no item with such id");
             }
-            _context.ToDoLists.Remove(list);
+
+            _context.ToDoLists.Remove(todoItem);
+            _context.SaveChanges();
         }
     }
 }
